@@ -1,0 +1,10 @@
+node_modules
+.shadow-cljs
+dist
+
+yarn-error.log
+
+.calva
+.clj-kondo
+.github
+.lsp

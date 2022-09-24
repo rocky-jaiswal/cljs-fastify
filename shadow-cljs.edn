@@ -1,0 +1,21 @@
+;; shadow-cljs configuration
+{:source-paths ["src"]
+
+ :dependencies [[cider/cider-nrepl "0.22.4"]
+                [funcool/promesa "8.0.446"]]
+
+ :nrepl {:port 3333}
+
+ :builds
+ {:app
+  {:main app.core/main
+   :target :node-script
+   :compiler-options {:infer-externs :auto :output-feature-set :es2020}
+   :output-to "dist/app.js"
+   :devtools
+   {:after-load app.core/start!
+    :before-load-async app.core/stop!}}
+  :test
+  {:target :node-test
+   :output-to "dist/tests.js"
+   :autorun true}}}

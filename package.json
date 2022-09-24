@@ -1,0 +1,20 @@
+{
+  "name": "cljs-fastify",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev:cljs": "shadow-cljs watch app",
+    "dev:js": "node dist/app.js",
+    "test": "shadow-cljs compile test && node dist/tests.js",
+    "build": "shadow-cljs release app",
+    "repl": "shadow-cljs node-repl"
+  },
+  "dependencies": {
+    "fastify": "^4.6.0",
+    "node-fetch": "2"
+  },
+  "devDependencies": {
+    "shadow-cljs": "^2.20.0"
+  }
+}
