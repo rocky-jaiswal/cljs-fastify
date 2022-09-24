@@ -1,6 +1,5 @@
 (ns app.web.controllers.app
   (:require [promesa.core :as p]
-            ;; [promesa.exec :as exec]
             ["node-fetch" :as fetch]))
 
 (defn slow [late]
@@ -14,5 +13,5 @@
 
 (defn health []
   (->
-   (p/let [_ (slow 1000) resp (fetch-uuid-v1)]
+   (p/let [_ (slow 500) resp (fetch-uuid-v1)]
      resp)))
