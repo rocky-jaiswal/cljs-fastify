@@ -3,26 +3,20 @@
 ## Getting Started
 
 ```
-$ npx degit gustavofsantos/cljs-fastify your-awesome-project
-$ cd your-awesome-project && yarn install
+$ yarn install
 ```
 
-Open two terminals then run these commands on each of them:
+Open 3 terminals then run these commands on each of them:
 
 ```sh
-# terminal 1
-
-$ yarn dev
+$ yarn repl
+$ yarn dev:cljs
+$ yarn dev:js
 ```
 
-```sh
-# terminal 2
+Running build:
 
+```sh
+$ yarn build
 $ node dist/app.js
-```
-
-Running tests
-
-```sh
-$ yarn test
 ```
