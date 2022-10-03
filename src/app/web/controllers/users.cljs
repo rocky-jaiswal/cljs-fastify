@@ -52,15 +52,11 @@
    ((fn [resp] (swap! state assoc :response (js->clj resp))))
    (p/promise state)))
 
-(defn actions [req-body]
+(defn create [req-body]
   (p/->> req-body
          (init-state)
          (validate-request)
          (enrich-data)
          (insert-in-db)
          (set-response)
-         (fn [_] handler-state)))
-
-(defn create [req-body]
-  (p/let [_ (actions req-body)]
-    (:response @handler-state)))
+         (:response @handler-state)))
