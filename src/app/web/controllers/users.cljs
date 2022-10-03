@@ -14,6 +14,12 @@
          :some-http-client {}
          :response {}}))
 
+(add-watch handler-state :watcher
+           (fn [_key _atom old-state new-state]
+             (prn "-- Atom Changed --")
+             (prn "old-state" old-state)
+             (prn "new-state" new-state)))
+
 (defn validate [email password password-confirmation]
   (->>
    [(str/includes? email "@") (> (.-length password) 5) (= password password-confirmation)]
@@ -36,13 +42,13 @@
 
 (defn enrich-data [state]
   (p/->>
-   (p/delay 1000) ;; assume we do some service invocation here
+   (p/delay 100) ;; assume we do some service invocation here
    (swap! state assoc :location "de")
    (p/promise state)))
 
 (defn insert-in-db [state]
   (p/->>
-   (p/delay 2000) ;; assume we do some DB invocation here
+   (p/delay 200) ;; assume we do some DB invocation here
    (swap! state assoc :created true)
    (p/promise state)))
 
