@@ -11,7 +11,7 @@
 (defonce server (volatile! nil))
 
 (defn start-server []
-  (let [app (fastify {:logger true})]
+  (let [app (fastify (clj->js {:logger true}))]
     (p/let [_ (r/router app)])
     (.listen app (clj->js {:port port}) (fn [_err]
                                           (js/console.log "Server started")
