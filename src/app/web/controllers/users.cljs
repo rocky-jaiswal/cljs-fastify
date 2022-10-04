@@ -16,6 +16,9 @@
 (def handler-state
   (atom base-state))
 
+(defn reset-to-base-state! []
+  (reset! handler-state base-state))
+
 (add-watch handler-state :watcher
            (fn [_key _atom old-state new-state]
              (prn "-- handler-state changed --")
@@ -32,7 +35,7 @@
     (.json response)))
 
 (defn init-state [req-body]
-  (reset! handler-state base-state)
+  (reset-to-base-state!)
   (swap! handler-state assoc :email (get req-body "email"))
   (swap! handler-state assoc :password (get req-body "password"))
   (swap! handler-state assoc :password-confirmation (get req-body "password_confirmation"))
@@ -45,13 +48,13 @@
 
 (defn enrich-data [state]
   (p/->>
-   (p/delay 100) ;; assume we do some service invocation here
+   (p/delay 50) ;; assume we do some service invocation here
    (swap! state assoc :location "de")
    (p/promise state)))
 
 (defn insert-in-db [state]
   (p/->>
-   (p/delay 200) ;; assume we do some DB invocation here
+   (p/delay 25) ;; assume we do some DB invocation here
    (swap! state assoc :created true)
    (p/promise state)))
 
