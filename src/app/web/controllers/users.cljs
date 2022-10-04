@@ -3,20 +3,22 @@
             [promesa.core :as p]
             ["node-fetch" :as fetch]))
 
+(def base-state {:email ""
+                 :password ""
+                 :password-confirmation ""
+                 :location ""
+                 :valid false
+                 :created false
+                 :some-db-conn {}
+                 :some-http-client {}
+                 :response {}})
+
 (def handler-state
-  (atom {:email ""
-         :password ""
-         :password-confirmation ""
-         :location ""
-         :valid false
-         :created false
-         :some-db-conn {}
-         :some-http-client {}
-         :response {}}))
+  (atom base-state))
 
 (add-watch handler-state :watcher
            (fn [_key _atom old-state new-state]
-             (prn "-- Atom Changed --")
+             (prn "-- handler-state changed --")
              (prn "old-state" old-state)
              (prn "new-state" new-state)))
 
@@ -30,6 +32,7 @@
     (.json response)))
 
 (defn init-state [req-body]
+  (reset! handler-state base-state)
   (swap! handler-state assoc :email (get req-body "email"))
   (swap! handler-state assoc :password (get req-body "password"))
   (swap! handler-state assoc :password-confirmation (get req-body "password_confirmation"))
