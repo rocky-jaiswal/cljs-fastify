@@ -13,18 +13,6 @@
                  :some-http-client {}
                  :response {}})
 
-(def handler-state
-  (atom base-state))
-
-(defn reset-to-base-state! []
-  (reset! handler-state base-state))
-
-(add-watch handler-state :watcher
-           (fn [_key _atom old-state new-state]
-             (prn "-- handler-state changed --")
-             (prn "old-state" old-state)
-             (prn "new-state" new-state)))
-
 (defn validate [email password password-confirmation]
   (->>
    [(str/includes? email "@") (> (.-length password) 5) (= password password-confirmation)]
@@ -34,8 +22,7 @@
   (p/let [response (fetch "https://httpbin.org/uuid")]
     (.json response)))
 
-(defn init-state [req-body]
-  (reset-to-base-state!)
+(defn init-state [handler-state req-body]
   (swap! handler-state assoc :email (get req-body "email"))
   (swap! handler-state assoc :password (get req-body "password"))
   (swap! handler-state assoc :password-confirmation (get req-body "password_confirmation"))
@@ -65,10 +52,16 @@
    (p/promise state)))
 
 (defn create [req-body]
-  (p/->> req-body
-         (init-state)
-         (validate-request)
-         (enrich-data)
-         (insert-in-db)
-         (set-response)
-         (:response @handler-state)))
+  (let [handler-state (atom base-state)]
+    (add-watch handler-state :watcher
+               (fn [_key _atom old-state new-state]
+                 (prn "-- handler-state changed --")
+                 (prn "old-state" old-state)
+                 (prn "new-state" new-state)))
+    (p/->> req-body
+           (init-state handler-state)
+           (validate-request)
+           (enrich-data)
+           (insert-in-db)
+           (set-response)
+           (:response @handler-state))))
