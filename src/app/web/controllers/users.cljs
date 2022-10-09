@@ -11,6 +11,7 @@
                  :created false
                  :some-db-conn {}
                  :some-http-client {}
+                 :uuid ""
                  :response {}})
 
 (defn validate [email password password-confirmation]
@@ -35,7 +36,7 @@
 
 (defn enrich-data [state]
   (p/->>
-   (p/delay 50) ;; assume we do some service invocation here
+   (p/delay 1500) ;; assume we do some service invocation here
    (swap! state assoc :location "de")
    (p/promise state)))
 
@@ -48,7 +49,8 @@
 (defn set-response [state]
   (p/->>
    (fetch-uuid-v1)
-   ((fn [resp] (swap! state assoc :response (js->clj resp))))
+   ((fn [resp] (swap! state assoc :uuid (get (js->clj resp) "uuid"))))
+   (swap! state assoc :response {:id (:uuid @state) :email (:email @state)})
    (p/promise state)))
 
 (defn create [req-body]
